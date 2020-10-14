@@ -1,0 +1,98 @@
+<div id="app">
+    <dl>
+        <dt>商品列表</dt>
+        <dd v-for="item in products">{{item.name}}</dd>
+    </dl>
+
+    <dl>
+        <dt>订单列表</dt>
+        <dd v-for="item in orders">{{item.name}}</dd>
+    </dl>
+</div>
+<script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
+<script src="https://unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
+<script>
+    Vue.use(Vuex);
+
+    let store = new Vuex.Store({
+        modules: {
+            product: {
+                namespaced:true, //添加命名空间 如果不添加，则getters会报错重复key
+                state: {
+                    list: [
+                        {
+                            name: '苹果电脑',
+                            id: 0
+                        },
+                        {
+                            name: 'IphoneX',
+                            id: 1
+                        }
+                    ]
+                },
+                getters: {
+                    list(state) {
+                        return state.list;
+                    }
+                },
+                actions: {
+                    queryList() {
+                        console.log('product queryList');
+                    }
+                },
+                mutations: {
+                    setList() {
+                        console.log('product setList')
+                    }
+                }
+            },
+            order: {
+                namespaced:true,
+                state: {
+                    list: [
+                        {
+                            name: '订单-苹果电脑',
+                            id: 0
+                        },
+                        {
+                            name: '订单-IphoneX',
+                            id: 1
+                        }
+                    ]
+                },
+                getters: {
+                    list: (state) => state.list
+                },
+                actions: {
+                    queryList() {
+                        console.log('order queryList');
+                    }
+                },
+                mutations: {
+                    setList() {
+                        console.log('order setList')
+                    }
+                }
+            }
+        }
+    });
+
+    new Vue({
+        el: '#app',
+        store,
+        computed: {
+            // 把 product 模块中的 list getter 映射为 products
+            ...Vuex.mapGetters('product', {
+                products: 'list'
+            }),
+            // 把 order 模块中的 list getter 映射为 orders
+            ...Vuex.mapGetters('order', {
+                orders: 'list'
+            }),
+        },
+        mounted() {
+            this.$store.dispatch('product/queryList'); // 调用 product模块的 getList action
+            this.$store.commit('order/setList'); // 调用order模块的 setList mutation
+        }
+    });
+</script>
