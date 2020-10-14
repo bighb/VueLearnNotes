@@ -1,0 +1,28 @@
+<div id="app">
+    我是app
+    <my-button>{{msg}}</my-button>
+</div>
+<script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
+<script>
+
+    new Vue({
+        el: '#app',
+        data(){
+            return{
+                msg:'我是插槽内容'
+            }
+        },
+        components: {
+            'my-button':{
+                data: function () {
+                return {
+                    count: 0
+                }
+            },
+            template: '<button v-on:click="count++"> <slot></slot> You clicked me {{ count }} times.</button>'
+            }
+          
+        },
+
+    });
+</script>
